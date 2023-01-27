@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Змейка</title>
+    <style>
+        html,
+        body {
+            height:100%;
+            margin: 0;
+
+
+        }
+        body{
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            border: 1px solid white;
+
+        }
+        .score{
+            color: white;
+            text-align: center;
+            font-size: 60px;
+        }
+        .score_text{
+            color: white;
+            text-align: center;
+            font-size: 20px;
+        }
+        div{width: 30%};
+
+    </style>
+</head>
+<body>
+    <div>
+    <p class="score_text">Очков набрано:</p><br>
+    <p class="score">0</p>
+    </div>  
+    <canvas id="game" width="400" height="400"></canvas>
+    <canvas id="game2" width="400" height="400"></canvas>
+
+
+    <script>
+let score = 0;
+let scoreRecorder = document.querySelector(".score");
+
+
+let canvas = document.getElementById('game');
+let context = canvas.getContext('2d');
+let grid = 16;
+let count = 0;
+let snake = {
+    x: 160,
+    y: 160,
+    dx: grid,
+    dy: 0,
+    cells: [],
+    maxCells: 4
+
+};
+let apple = {
+    x: 320,
+    y: 320
+};
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+function loop() {
+    requestAnimationFrame(loop);
+    if (++count < 4){
+        return;
+    }
+    count = 0;
+    context.clearRect(0, 0, canvas.clientWidth, canvas.height);
+    snake.x += snake.dx;
+    snake.y += snake.dy;
+    if (snake.x < 0) {
+        snake.x = canvas.width - grid;
+    }else if(snake.x >= canvas.width){
+        snake.x = 0;
+
+    } if (snake.y < 0) {
+        snake.y = canvas.height - grid;
+    }else if(snake.y >= canvas.height){
+        snake.y = 0;
+    }
+    snake.cells.unshift({x: snake.x, y: snake.y });
+    if (snake.cells.length > snake.maxCells){
+        snake.cells.pop();
+        
+    }
+    context.fillStyle = 'red';
+    context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+    context.fillStyle = 'green';
+    snake.cells.forEach(function(cell, index){
+        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+        if ( cell.x === apple.x && cell.y === apple.y){
+            snake.maxCells++;
+            score += 1;
+            scoreRecorder.textContent = score;
+            apple.x = getRandomInt(0, 25) * grid;
+            apple.y = getRandomInt(0, 25) * grid;
+        }
+        for (var i = index + 1; i < snake.cells.length; i++){
+            if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y){
+                snake.x = 160;
+                snake.y = 160;
+                snake.cells = [];
+                snake.maxCells = 4;
+                snake.dx = grid;
+                snake.dy = 0;
+                score = 0;
+                scoreRecorder.textContent = score;
+                apple.x = getRandomInt(0, 25) * grid;
+                apple.y = getRandomInt(0, 25) * grid;
+                
+            }
+        }
+    });
+}
+document.addEventListener('keydown', function(e){
+    if (e.which === 37 && snake.dx === 0){
+        snake.dx = -grid;
+        snake.dy = 0;
+    }
+    else if (e.which === 38 && snake.dy === 0) {
+        snake.dy = -grid;
+        snake.dx = 0;
+    }
+    else if (e.which === 39 && snake.dx === 0) {
+        snake.dx = grid;
+        snake.dy = 0;
+    }
+    else if (e.which === 40 && snake.dy === 0) {
+        snake.dy = grid;
+        snake.dx = 0;
+    }
+});
+
+requestAnimationFrame(loop);
+    </script>
+     <script>/*
+        let score = 0;
+        let scoreRecorder = document.querySelector(".score");
+        
+        
+        let canvas2 = document.getElementById('game2');
+        let context2 = canvas.getContext('2d');
+        let grid2 = 16;
+        let count2 = 0;
+        let snake2 = {
+            x2: 160,
+            y2: 160,
+            dx2: grid,
+            dy2: 0,
+            cells2: [],
+            maxCells2: 4
+        
+        };
+        let apple2 = {
+            x2: 320,
+            y2: 320
+        };
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+          }
+        function loop() {
+            requestAnimationFrame(loop);
+            if (++count < 4){
+                return;
+            }
+            count2 = 0;
+            context2.clearRect(0, 0, canvas2.clientWidth, canvas2.height2);
+            snake2.x2 += snake2.dx2;
+            snake2.y2 += snake2.dy2;
+            if (snake2.x2 < 0) {
+                snake2.x2 = canvas2.width2 - grid2;
+            }else if(snake2.x2 >= canvas2.width2){
+                snake2.x2 = 0;
+        
+            } if (snake2.y2 < 0) {
+                snake2.y2 = canvas2.height2 - grid2;
+            }else if(snake2.y2 >= canvas2.height2){
+                snake2.y2 = 0;
+            }
+            snake2.cells2.unshift({x2: snake2.x2, y2: snake2.y2 });
+            if (snake2.cells2.length2 > snake2.maxCells2){
+                snake2.cells2.pop();
+                
+            }
+            context2.fillStyle2 = 'red';
+            context2.fillRect(apple2.x2, apple2.y2, grid2 - 1, grid2 - 1);
+            context2.fillStyle2 = 'green';
+            snake2.cells2.forEach(function(cell2, index2){
+                context2.fillRect(cell2.x2, cell2.y2, grid2 - 1, grid2 - 1);
+                if ( cell.x === apple.x && cell.y === apple.y){
+                    snake.maxCells++;
+                    score += 1;
+                    scoreRecorder.textContent = score;
+                    apple.x = getRandomInt(0, 25) * grid;
+                    apple.y = getRandomInt(0, 25) * grid;
+                }
+                for (var i = index + 1; i < snake.cells.length; i++){
+                    if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y){
+                        snake.x = 160;
+                        snake.y = 160;
+                        snake.cells = [];
+                        snake.maxCells = 4;
+                        snake.dx = grid;
+                        snake.dy = 0;
+                        score = 0;
+                        scoreRecorder.textContent = score;
+                        apple.x = getRandomInt(0, 25) * grid;
+                        apple.y = getRandomInt(0, 25) * grid;
+                        
+                    }
+                }
+            });
+        }
+        document.addEventListener('keydown', function(e){
+            if (e.which === 37 && snake.dx === 0){
+                snake.dx = -grid;
+                snake.dy = 0;
+            }
+            else if (e.which === 38 && snake.dy === 0) {
+                snake.dy = -grid;
+                snake.dx = 0;
+            }
+            else if (e.which === 39 && snake.dx === 0) {
+                snake.dx = grid;
+                snake.dy = 0;
+            }
+            else if (e.which === 40 && snake.dy === 0) {
+                snake.dy = grid;
+                snake.dx = 0;
+            }
+        });
+        
+        requestAnimationFrame(loop);*/
+            </script>
+</body>
+</html>
